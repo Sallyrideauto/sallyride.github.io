@@ -1,170 +1,177 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html>
 <head>
 <meta charset="UTF-8">
 <style>
-    /* Departure Mono 폰트 */
-    @font-face {
-        font-family: 'Departure Mono';
-        src: url('https://cdn.jsdelivr.net/gh/ozcanzaferayan/departure-mono@main/fonts/DepartureMono-Regular.woff2') format('woff2');
-        font-weight: normal;
-        font-style: normal;
-    }
+  /* 1. CSS 변수 설정: 색상 관리 */
+  :root {
+    --text-main: #37352f;
+    --text-sub: #787774;
+    --bg-input: rgba(255, 255, 255, 0.6);
+    --border-color: rgba(55, 53, 47, 0.16);
+    --hover-bg: rgba(55, 53, 47, 0.08);
+    --accent-color: #e16259; /* 뽀모도로 레드 */
+  }
 
-    body {
-        margin: 0;
-        padding: 0;
-        font-family: 'Departure Mono', monospace; 
-        background-color: transparent;
-        color: #37352f;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        overflow: hidden;
+  /* 2. 다크 모드 감지 및 색상 변수 변경 */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --text-main: #d9d9d9;
+      --text-sub: #9b9b9b;
+      --bg-input: rgba(255, 255, 255, 0.1);
+      --border-color: rgba(255, 255, 255, 0.13);
+      --hover-bg: rgba(255, 255, 255, 0.08);
     }
-    .container {
-        display: flex;
-        gap: 40px; /* 정보가 많아져서 간격을 살짝 넓혀 가독성 확보 */
-        text-align: center;
-        align-items: flex-start; /* 상단 정렬 */
-    }
-    .clock-box {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    .label {
-        font-size: 13px; 
-        color: #9b9a97;
-        margin-bottom: 2px;
-        text-transform: uppercase;
-        letter-spacing: 0px; 
-    }
-    .time {
-        font-size: 32px; 
-        font-weight: normal;
-        white-space: nowrap;
-        line-height: 1.2;
-    }
-    .date {
-        font-size: 13px;
-        color: #9b9a97;
-        white-space: nowrap;
-        opacity: 0.8;
-        margin-top: -2px;
-        margin-bottom: 6px;
-    }
-    /* ▼▼▼ 날씨 스타일 ▼▼▼ */
-    .weather {
-        font-size: 14px;
-        color: #37352f;
-        background: rgba(155, 154, 151, 0.15); /* 아주 옅은 회색 배경 */
-        padding: 4px 8px;
-        border-radius: 6px;
-        display: inline-block;
-        margin-top: 2px;
-        white-space: nowrap;
-    }
-    
-    /* 다크모드 대응 */
-    @media (prefers-color-scheme: dark) {
-        body { color: #ffffff; }
-        .label, .date { color: rgba(255, 255, 255, 0.6); }
-        .weather { color: #ffffff; background: rgba(255, 255, 255, 0.15); }
-    }
+  }
+
+  /* 3. 기본 스타일 (배경 투명화) */
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    padding: 20px;
+    background-color: transparent; /* 배경 투명 */
+    color: var(--text-main);
+    margin: 0;
+  }
+
+  /* 타이머 스타일 */
+  .timer-box { text-align: center; margin-bottom: 25px; }
+  .time { font-size: 56px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -2px; margin-bottom: 10px; }
+  
+  .btn-group { display: flex; justify-content: center; gap: 10px; }
+  .btn {
+    padding: 6px 16px; border: 1px solid var(--border-color); border-radius: 6px;
+    background: var(--bg-input); color: var(--text-main); cursor: pointer;
+    font-size: 14px; transition: background 0.2s;
+  }
+  .btn:hover { background: var(--hover-bg); }
+  .btn.start { border-color: var(--accent-color); color: var(--accent-color); font-weight: 600; }
+
+  /* 태스크 리스트 스타일 */
+  .task-input {
+    width: 100%; padding: 10px; border: 1px solid var(--border-color);
+    background: var(--bg-input); color: var(--text-main);
+    border-radius: 6px; box-sizing: border-box; outline: none;
+    font-size: 14px;
+  }
+  .task-input::placeholder { color: var(--text-sub); }
+
+  .task-list { list-style: none; padding: 0; margin-top: 15px; }
+  .task-item {
+    margin-bottom: 8px; padding: 8px; border-radius: 6px;
+    transition: background 0.2s;
+  }
+  .task-item:hover { background: var(--hover-bg); }
+
+  .task-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; }
+  .task-title { display: flex; align-items: center; gap: 8px; font-size: 15px; }
+  .checkbox { cursor: pointer; }
+  .details-btn { font-size: 12px; color: var(--text-sub); background: none; border: none; }
+  
+  .sub-tasks {
+    display: none; margin-top: 8px; padding-left: 28px;
+  }
+  .show { display: block; }
+  
+  .sub-input {
+    width: 100%; padding: 8px; background: transparent;
+    border: none; border-left: 2px solid var(--border-color);
+    color: var(--text-sub); font-size: 13px; resize: none; outline: none;
+  }
+  
+  /* 완료된 태스크 스타일 */
+  .done { text-decoration: line-through; color: var(--text-sub); }
 </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="clock-box">
-        <div class="label">🇨🇦 Calgary</div>
-        <div class="time" id="local-time">00:00</div>
-        <div class="date" id="local-date">--- --, ---</div>
-        <div class="weather" id="local-weather">Loading...</div>
-    </div>
-
-    <div class="clock-box">
-        <div class="label" id="target-label">🇰🇷 Seoul</div>
-        <div class="time" id="target-time">00:00</div>
-        <div class="date" id="target-date">--- --, ---</div>
-        <div class="weather" id="target-weather">Loading...</div>
-    </div>
+<div class="timer-box">
+  <div class="time" id="timer">25:00</div>
+  <div class="btn-group">
+    <button class="btn start" onclick="startTimer()">Start</button>
+    <button class="btn" onclick="resetTimer()">Reset</button>
+  </div>
 </div>
 
+<input type="text" class="task-input" id="mainTaskInput" placeholder="+ 할 일 추가 (Enter)">
+<ul class="task-list" id="taskList"></ul>
+
 <script>
-    // ▼▼▼ 설정 구간 ▼▼▼
-    const targetTimeZone = 'Asia/Seoul'; 
+  // 타이머 로직 (이전과 동일)
+  let timeLeft = 1500; let interval; let isRunning = false;
+  
+  function updateDisplay() {
+    const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+    const s = (timeLeft % 60).toString().padStart(2, '0');
+    document.getElementById('timer').innerText = `${m}:${s}`;
+    document.title = `${m}:${s} - Pomodoro`;
+  }
+  
+  function startTimer() {
+    if(isRunning) { // 일시정지 기능 추가
+      clearInterval(interval); isRunning = false;
+      document.querySelector('.start').innerText = 'Resume';
+      return;
+    }
+    isRunning = true;
+    document.querySelector('.start').innerText = 'Pause';
+    interval = setInterval(() => {
+      timeLeft--; updateDisplay();
+      if(timeLeft === 0) { 
+        clearInterval(interval); isRunning = false; 
+        alert('집중 시간 종료! 휴식하세요.'); 
+        resetTimer(); 
+      }
+    }, 1000);
+  }
+  
+  function resetTimer() { 
+    clearInterval(interval); isRunning = false; timeLeft = 1500; 
+    updateDisplay(); 
+    document.querySelector('.start').innerText = 'Start';
+  }
+
+  // 투두 리스트 로직 (체크박스 기능 개선)
+  document.getElementById('mainTaskInput').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+      const text = this.value;
+      if (!text) return;
+      
+      const li = document.createElement('li');
+      li.className = 'task-item';
+      li.innerHTML = `
+        <div class="task-header">
+          <span class="task-title" onclick="toggleDone(this)">
+            <span>⬜</span> <span>${text}</span>
+          </span>
+          <button class="details-btn" onclick="toggleDetails(this)">Details ▼</button>
+        </div>
+        <div class="sub-tasks">
+          <textarea class="sub-input" rows="2" placeholder="세부 내용 입력..."></textarea>
+        </div>
+      `;
+      document.getElementById('taskList').appendChild(li);
+      this.value = '';
+    }
+  });
+
+  function toggleDetails(btn) {
+    const subArea = btn.parentElement.nextElementSibling;
+    subArea.classList.toggle('show');
+    btn.innerText = subArea.classList.contains('show') ? 'Close ▲' : 'Details ▼';
+  }
+
+  function toggleDone(span) {
+    const textSpan = span.querySelector('span:last-child');
+    const iconSpan = span.querySelector('span:first-child');
     
-    // 날씨 좌표 설정 (Open-Meteo API용 위도, 경도)
-    const cities = {
-        local: { lat: 51.0501, lon: -114.0853 }, // 캘거리 좌표
-        target: { lat: 37.5665, lon: 126.9780 }  // 서울 좌표
-    };
-    // ▲▲▲ 설정 끝 ▲▲▲
-
-    function updateTime() {
-        const now = new Date();
-        const dateOptions = { month: 'short', day: 'numeric', weekday: 'short' };
-
-        // 1. 캘거리 시간 & 날짜
-        document.getElementById('local-time').innerText = now.toLocaleTimeString('en-US', {
-            hour: '2-digit', minute: '2-digit', hour12: false 
-        });
-        document.getElementById('local-date').innerText = now.toLocaleDateString('en-US', dateOptions);
-
-        // 2. 서울 시간 & 날짜
-        document.getElementById('target-time').innerText = now.toLocaleTimeString('en-US', {
-            timeZone: targetTimeZone, hour: '2-digit', minute: '2-digit', hour12: false 
-        });
-        document.getElementById('target-date').innerText = now.toLocaleDateString('en-US', {
-            ...dateOptions, timeZone: targetTimeZone
-        });
+    if (textSpan.classList.contains('done')) {
+      textSpan.classList.remove('done');
+      iconSpan.innerText = '⬜';
+    } else {
+      textSpan.classList.add('done');
+      iconSpan.innerText = '✅';
     }
-
-    // 날씨 아이콘 변환 함수 (WMO 코드 -> 이모지)
-    function getWeatherIcon(code) {
-        if (code === 0) return '☀️'; // 맑음
-        if (code >= 1 && code <= 3) return '☁️'; // 흐림
-        if (code >= 45 && code <= 48) return '🌫️'; // 안개
-        if (code >= 51 && code <= 67) return '🌧️'; // 비
-        if (code >= 71 && code <= 77) return '❄️'; // 눈
-        if (code >= 80 && code <= 99) return '⛈️'; // 폭풍우
-        return '🌡️';
-    }
-
-    // 날씨 정보 가져오기 (Open-Meteo API)
-    async function fetchWeather(lat, lon, elementId) {
-        try {
-            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
-            const response = await fetch(url);
-            const data = await response.json();
-            
-            const temp = Math.round(data.current_weather.temperature);
-            const weatherCode = data.current_weather.weathercode;
-            const icon = getWeatherIcon(weatherCode);
-
-            document.getElementById(elementId).innerText = `${icon} ${temp}°C`;
-        } catch (error) {
-            console.error('Weather Fetch Error:', error);
-            document.getElementById(elementId).innerText = '--°C';
-        }
-    }
-
-    function updateAllWeather() {
-        fetchWeather(cities.local.lat, cities.local.lon, 'local-weather');
-        fetchWeather(cities.target.lat, cities.target.lon, 'target-weather');
-    }
-
-    // 시간은 1초마다 갱신
-    setInterval(updateTime, 1000);
-    updateTime();
-
-    // 날씨는 처음에 한 번 실행하고, 30분마다 갱신
-    updateAllWeather();
-    setInterval(updateAllWeather, 1800000); 
-
+  }
 </script>
 
 </body>
