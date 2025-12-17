@@ -2,6 +2,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding:wght@400;700&display=swap" rel="stylesheet">
+
 <style>
   /* --- 1. 색상 및 변수 설정 --- */
   :root {
@@ -10,12 +14,12 @@
     
     --border-input: rgba(55, 53, 47, 0.4);
     
-    /* 카테고리 색상 정의 */
+    /* 카테고리 색상 */
     --c-work: #7CAFC4;
     --c-study: #A1C084;
     --c-social: #EAC9C1;
     --c-mind: #EBD8D0;
-    --c-etc: #CDD7D6; /* 새로 추가된 ETC 색상 */
+    --c-etc: #CDD7D6;
     
     --shadow-card: 0 2px 5px rgba(0,0,0,0.1);
     --danger-color: #c0392b;
@@ -30,23 +34,29 @@
   }
 
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    /* 폰트 적용: 나눔고딕 코딩 */
+    font-family: 'Nanum Gothic Coding', monospace;
     padding: 20px;
     color: var(--text-main);
     background: transparent;
     margin: 0;
   }
 
+  /* 폰트가 상속되지 않는 요소들에 강제 적용 */
+  button, input, textarea {
+    font-family: 'Nanum Gothic Coding', monospace;
+  }
+
   /* --- 타이머 --- */
   .timer-box { text-align: center; margin-bottom: 25px; color: #37352f; }
   @media (prefers-color-scheme: dark) { .timer-box { color: #d9d9d9; } }
   
-  .time { font-size: 52px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -2px; margin-bottom: 10px; }
+  .time { font-size: 52px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -1px; margin-bottom: 10px; }
   
   .btn {
     padding: 6px 16px; border: 1px solid rgba(0,0,0,0.1); border-radius: 8px;
     background: rgba(255,255,255,0.8); color: #333; cursor: pointer;
-    font-size: 13px; font-weight: 600; transition: 0.2s;
+    font-size: 13px; font-weight: 700; transition: 0.2s;
     box-shadow: 0 1px 2px rgba(0,0,0,0.1);
   }
   .btn:hover { background: white; transform: translateY(-1px); }
@@ -130,26 +140,24 @@
   .task-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
   .task-left { display: flex; align-items: center; gap: 10px; flex-grow: 1; }
   
-  /* [핵심 수정] 체크박스 디자인 */
+  /* 체크박스 로직: 미완료(투명) -> 완료(체크) */
   .custom-check { 
     width: 18px; height: 18px; 
-    background: rgba(255,255,255,0.4); /* 미완료 시 배경 */
+    background: rgba(255,255,255,0.4); 
     border: 1.5px solid rgba(0,0,0,0.2); 
     border-radius: 50%; 
     display: flex; align-items: center; justify-content: center; 
     font-size: 12px; transition: 0.2s;
-    color: transparent; /* 미완료 시 체크무늬 숨김 */
+    color: transparent; /* 미완료 시 숨김 */
   }
-  
-  /* 완료되었을 때 스타일 */
   .done .custom-check { 
     background: #333; 
-    color: white; /* 체크무늬 보임 */
+    color: white; /* 완료 시 보임 */
     border-color: transparent; 
   }
   
-  .task-title { font-size: 15px; font-weight: 600; transition: 0.2s; }
-  .sub-percent { font-size: 11px; opacity: 0.6; font-weight: 700; color: #000; }
+  .task-title { font-size: 15px; font-weight: 700; transition: 0.2s; }
+  .sub-percent { font-size: 12px; opacity: 0.6; font-weight: 700; color: #000; margin-left: 4px; }
   
   .task-controls button { background: none; border: none; cursor: pointer; color: #444; opacity: 0.5; padding: 4px; transition: 0.2s; }
   .task-controls button:hover { opacity: 1; color: #000; }
@@ -228,8 +236,8 @@
 
 <script>
   let currentCategory = 'work';
-  const STORAGE_KEY = 'notion_pomodoro_v5';
-  const DATE_KEY = 'notion_pomodoro_date_v5';
+  const STORAGE_KEY = 'notion_pomodoro_v6_font';
+  const DATE_KEY = 'notion_pomodoro_date_v6';
 
   window.onload = function() {
     const today = new Date().toLocaleDateString();
@@ -258,14 +266,7 @@
   
   function updateInputBorder(cat) {
     const input = document.getElementById('mainTaskInput');
-    // 색상 매핑
-    const colors = { 
-      work: '#7CAFC4', 
-      study: '#A1C084', 
-      social: '#EAC9C1', 
-      mind: '#EBD8D0',
-      etc: '#CDD7D6'
-    };
+    const colors = { work: '#7CAFC4', study: '#A1C084', social: '#EAC9C1', mind: '#EBD8D0', etc: '#CDD7D6' };
     input.style.borderColor = "var(--border-input)";
     input.onfocus = () => input.style.borderColor = colors[cat];
     input.onblur = () => input.style.borderColor = "var(--border-input)";
@@ -291,7 +292,6 @@
   function loadTasks() { render(getTasks()); }
 
   function render(tasks) {
-    // Etc 포함 모든 섹션 초기화
     ['work', 'study', 'social', 'mind', 'etc'].forEach(cat => {
       document.getElementById(`list-${cat}`).innerHTML = '';
       document.getElementById(`sec-${cat}`).classList.remove('has-items');
