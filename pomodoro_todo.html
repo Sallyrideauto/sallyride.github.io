@@ -6,25 +6,24 @@
   /* --- 1. 색상 및 변수 설정 --- */
   :root {
     --text-main: #37352f;
-    --text-sub: #4a4a4a; /* 배경색 위에서도 잘 보이도록 조금 더 진하게 */
+    --text-sub: #4a4a4a;
     
-    /* 입력창 테두리 (투명 배경이므로 테두리로 영역 표시) */
     --border-input: rgba(55, 53, 47, 0.4);
     
-    /* 요청하신 카테고리 색상 (할 일 배경색) */
+    /* 카테고리 색상 정의 */
     --c-work: #7CAFC4;
     --c-study: #A1C084;
     --c-social: #EAC9C1;
     --c-mind: #EBD8D0;
+    --c-etc: #CDD7D6; /* 새로 추가된 ETC 색상 */
     
     --shadow-card: 0 2px 5px rgba(0,0,0,0.1);
-    --danger-color: #c0392b; /* 배경색 위에서 잘 보이도록 진한 빨강 */
+    --danger-color: #c0392b;
   }
 
-  /* 다크 모드 감지 (글자색 조정) */
   @media (prefers-color-scheme: dark) {
     :root {
-      --text-main: #1a1a1a; /* 밝은 파스텔 배경 위라 글자는 어두운 게 가독성이 좋습니다 */
+      --text-main: #1a1a1a;
       --text-sub: #333333;
       --border-input: rgba(255, 255, 255, 0.4);
     }
@@ -38,9 +37,9 @@
     margin: 0;
   }
 
-  /* --- 타이머 디자인 --- */
+  /* --- 타이머 --- */
   .timer-box { text-align: center; margin-bottom: 25px; color: #37352f; }
-  @media (prefers-color-scheme: dark) { .timer-box { color: #d9d9d9; } } /* 타이머 숫자는 노션 배경 따라가기 */
+  @media (prefers-color-scheme: dark) { .timer-box { color: #d9d9d9; } }
   
   .time { font-size: 52px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -2px; margin-bottom: 10px; }
   
@@ -55,7 +54,6 @@
   /* --- 달성률 바 --- */
   .daily-progress-container { margin-bottom: 25px; padding: 0 4px; }
   .daily-label { font-size: 12px; color: var(--text-sub); display: flex; justify-content: space-between; margin-bottom: 6px; font-weight: 700; opacity: 0.8; }
-  /* 라벨 색상은 노션 배경 위이므로 일반 텍스트 색상 사용 */
   @media (prefers-color-scheme: dark) { .daily-label { color: #9b9b9b; } }
   
   .progress-bar-bg { width: 100%; height: 8px; background: rgba(55,53,47, 0.1); border-radius: 4px; overflow: hidden; }
@@ -66,37 +64,36 @@
   }
   @media (prefers-color-scheme: dark) { .progress-bar-fill { background: #d9d9d9; } }
 
-
   /* --- 카테고리 버튼 --- */
   .category-selector { display: flex; gap: 8px; margin-bottom: 12px; overflow-x: auto; padding-bottom: 4px; }
   .cat-btn {
     border: 1px solid transparent; background: transparent; 
     padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 700;
     cursor: pointer; opacity: 0.6; transition: 0.2s; display: flex; align-items: center; gap: 6px;
-    color: #787774; border: 1px solid rgba(55,53,47,0.2);
+    color: #787774; border: 1px solid rgba(55,53,47,0.2); white-space: nowrap;
   }
   @media (prefers-color-scheme: dark) { .cat-btn { color: #9b9b9b; border-color: rgba(255,255,255,0.2); } }
 
   .cat-btn:hover { opacity: 1; transform: translateY(-1px); }
   
-  /* 활성화된 버튼: 해당 색상으로 채움 */
   .cat-btn.active { opacity: 1; color: #222; border-color: transparent; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
   .cat-btn.active.work { background: var(--c-work); }
   .cat-btn.active.study { background: var(--c-study); }
   .cat-btn.active.social { background: var(--c-social); }
   .cat-btn.active.mind { background: var(--c-mind); }
+  .cat-btn.active.etc { background: var(--c-etc); }
 
-  /* --- 입력창 (투명 배경) --- */
+  /* --- 입력창 --- */
   .task-input {
     width: 100%; padding: 12px; 
-    background: transparent; /* 투명 배경 */
+    background: transparent;
     border: 1px solid var(--border-input);
-    color: inherit; /* 부모(body) 색상 상속 */
+    color: inherit;
     border-radius: 8px; box-sizing: border-box; outline: none; font-size: 14px;
     margin-bottom: 24px; transition: 0.2s;
   }
   @media (prefers-color-scheme: dark) { .task-input { color: #d9d9d9; } }
-  .task-input:focus { border-color: var(--c-work); border-width: 1.5px; }
+  .task-input:focus { border-width: 1.5px; }
 
   /* --- 리스트 섹션 --- */
   .section-container { margin-bottom: 24px; display: none; }
@@ -107,40 +104,49 @@
     margin-bottom: 10px; padding-left: 4px; display: flex; align-items: center; gap: 8px;
     opacity: 0.9;
   }
-  /* 헤더 텍스트 색상 */
   .sec-work { color: var(--c-work); }
   .sec-study { color: var(--c-study); }
   .sec-social { color: var(--c-social); }
   .sec-mind { color: var(--c-mind); }
+  .sec-etc { color: var(--c-etc); }
 
   .task-list { list-style: none; padding: 0; margin: 0; }
 
-  /* --- 태스크 아이템 (카드 전체에 색상 적용) --- */
+  /* --- 태스크 아이템 --- */
   .task-item {
     margin-bottom: 10px; padding: 12px 14px; border-radius: 8px;
     box-shadow: var(--shadow-card);
     transition: transform 0.2s, box-shadow 0.2s;
-    color: #2c2c2c; /* 파스텔 배경 위 검은 글씨 */
+    color: #2c2c2c;
   }
   .task-item:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
 
-  /* 배경색 적용 로직 */
   .task-item[data-cat="work"] { background: var(--c-work); }
   .task-item[data-cat="study"] { background: var(--c-study); }
   .task-item[data-cat="social"] { background: var(--c-social); }
   .task-item[data-cat="mind"] { background: var(--c-mind); }
+  .task-item[data-cat="etc"] { background: var(--c-etc); }
 
   .task-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
   .task-left { display: flex; align-items: center; gap: 10px; flex-grow: 1; }
   
-  /* 체크박스 (흰색 배경으로 눈에 띄게) */
+  /* [핵심 수정] 체크박스 디자인 */
   .custom-check { 
-    width: 18px; height: 18px; background: rgba(255,255,255,0.4); 
-    border: 1.5px solid rgba(0,0,0,0.2); border-radius: 50%; 
-    display: flex; align-items: center; justify-content: center; font-size: 12px; transition: 0.2s;
+    width: 18px; height: 18px; 
+    background: rgba(255,255,255,0.4); /* 미완료 시 배경 */
+    border: 1.5px solid rgba(0,0,0,0.2); 
+    border-radius: 50%; 
+    display: flex; align-items: center; justify-content: center; 
+    font-size: 12px; transition: 0.2s;
+    color: transparent; /* 미완료 시 체크무늬 숨김 */
   }
-  /* 완료 시 체크박스 진하게 */
-  .done .custom-check { background: #333; color: white; border-color: transparent; }
+  
+  /* 완료되었을 때 스타일 */
+  .done .custom-check { 
+    background: #333; 
+    color: white; /* 체크무늬 보임 */
+    border-color: transparent; 
+  }
   
   .task-title { font-size: 15px; font-weight: 600; transition: 0.2s; }
   .sub-percent { font-size: 11px; opacity: 0.6; font-weight: 700; color: #000; }
@@ -153,7 +159,6 @@
   .sub-tasks-container { display: none; margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.08); }
   .sub-tasks-container.show { display: block; }
   
-  /* 하위 입력창 (약간 어둡게 하여 구분) */
   .sub-input {
     width: 100%; border: none; background: rgba(0,0,0,0.05); 
     border-radius: 4px; padding: 6px 8px;
@@ -163,9 +168,7 @@
 
   .sub-task-item { display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: #444; padding: 4px 0; }
   .sub-left { display: flex; align-items: center; gap: 8px; cursor: pointer; }
-  .sub-check { font-size: 14px; opacity: 0.6; }
   
-  /* 완료 상태 */
   .done-title { text-decoration: line-through; opacity: 0.5; }
   .sub-text.done { text-decoration: line-through; opacity: 0.5; }
 
@@ -195,6 +198,7 @@
   <button class="cat-btn study" onclick="selectCategory('study')">Study</button>
   <button class="cat-btn social" onclick="selectCategory('social')">Social</button>
   <button class="cat-btn mind" onclick="selectCategory('mind')">Mind</button>
+  <button class="cat-btn etc" onclick="selectCategory('etc')">Etc</button>
 </div>
 
 <input type="text" class="task-input" id="mainTaskInput" placeholder="Add task to Work..." onkeypress="handleInput(event)">
@@ -216,13 +220,16 @@
     <div class="section-header sec-mind">● Mind</div>
     <ul class="task-list" id="list-mind"></ul>
   </div>
+  <div class="section-container" id="sec-etc">
+    <div class="section-header sec-etc">● Etc</div>
+    <ul class="task-list" id="list-etc"></ul>
+  </div>
 </div>
 
 <script>
-  // --- 설정 및 상태 관리 ---
   let currentCategory = 'work';
-  const STORAGE_KEY = 'notion_pomodoro_final';
-  const DATE_KEY = 'notion_pomodoro_date_final';
+  const STORAGE_KEY = 'notion_pomodoro_v5';
+  const DATE_KEY = 'notion_pomodoro_date_v5';
 
   window.onload = function() {
     const today = new Date().toLocaleDateString();
@@ -233,7 +240,6 @@
       saveData([]); 
     }
     loadTasks();
-    // 초기 로딩 시 입력창 보더 색상 설정
     updateInputBorder('work');
   };
 
@@ -251,11 +257,16 @@
   }
   
   function updateInputBorder(cat) {
-    // 포커스 시 색상을 카테고리 색으로
     const input = document.getElementById('mainTaskInput');
-    // CSS 변수 값을 가져오기 위해 임시 요소 사용하지 않고 직접 매핑
-    const colors = { work: '#7CAFC4', study: '#A1C084', social: '#EAC9C1', mind: '#EBD8D0' };
-    input.style.borderColor = "var(--border-input)"; // 평소엔 기본색
+    // 색상 매핑
+    const colors = { 
+      work: '#7CAFC4', 
+      study: '#A1C084', 
+      social: '#EAC9C1', 
+      mind: '#EBD8D0',
+      etc: '#CDD7D6'
+    };
+    input.style.borderColor = "var(--border-input)";
     input.onfocus = () => input.style.borderColor = colors[cat];
     input.onblur = () => input.style.borderColor = "var(--border-input)";
   }
@@ -269,7 +280,6 @@
     }
   }
 
-  // --- 데이터 관리 ---
   function getTasks() { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
   function saveData(tasks) { localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks)); render(tasks); }
 
@@ -280,9 +290,9 @@
   }
   function loadTasks() { render(getTasks()); }
 
-  // --- 렌더링 ---
   function render(tasks) {
-    ['work', 'study', 'social', 'mind'].forEach(cat => {
+    // Etc 포함 모든 섹션 초기화
+    ['work', 'study', 'social', 'mind', 'etc'].forEach(cat => {
       document.getElementById(`list-${cat}`).innerHTML = '';
       document.getElementById(`sec-${cat}`).classList.remove('has-items');
     });
@@ -341,7 +351,6 @@
     bar.style.width = `${dailyPercent}%`;
   }
 
-  // --- 이벤트 로직 ---
   function toggleTask(id) {
     const tasks = getTasks();
     const task = tasks.find(t => t.id === id);
@@ -380,7 +389,6 @@
     }
   }
 
-  // --- 타이머 로직 ---
   let timeLeft = 1500; let interval; let isRunning = false;
   function updateTimer() {
     const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
