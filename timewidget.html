@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<style>
+    /* Departure Mono 폰트 불러오기 */
+    @font-face {
+        font-family: 'Departure Mono';
+        src: url('https://cdn.jsdelivr.net/gh/ozcanzaferayan/departure-mono@main/fonts/DepartureMono-Regular.woff2') format('woff2');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Departure Mono', monospace; 
+        background-color: transparent;
+        color: #37352f;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        overflow: hidden;
+    }
+    .container {
+        display: flex;
+        gap: 50px; 
+        text-align: center;
+    }
+    .clock-box {
+        display: flex;
+        flex-direction: column;
+    }
+    .label {
+        font-size: 13px; 
+        color: #9b9a97;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0px; 
+    }
+    .time {
+        font-size: 32px; 
+        font-weight: normal;
+        white-space: nowrap;
+        line-height: 1;
+    }
+    
+    /* 다크모드 대응 */
+    @media (prefers-color-scheme: dark) {
+        body { color: #ffffff; }
+        .label { color: rgba(255, 255, 255, 0.6); }
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="clock-box">
+        <div class="label">Calgary</div> <div class="time" id="local-time">00:00</div>
+    </div>
+
+    <div class="clock-box">
+        <div class="label" id="target-label">Seoul</div>
+        <div class="time" id="target-time">00:00</div>
+    </div>
+</div>
+
+<script>
+    // ▼▼▼ 설정 구간 (서울로 변경됨) ▼▼▼
+    const targetTimeZone = 'Asia/Seoul'; 
+    const targetCityName = 'Seoul'; 
+    // ▲▲▲ 설정 끝 ▲▲▲
+
+    document.getElementById('target-label').innerText = targetCityName;
+
+    function updateTime() {
+        const now = new Date();
+
+        // 1. 캘거리 시간 (현재 브라우저/시스템 시간)
+        const localTimeStr = now.toLocaleTimeString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false 
+        });
+        document.getElementById('local-time').innerText = localTimeStr;
+
+        // 2. 서울 시간 (타임존 강제 지정)
+        const targetTimeStr = now.toLocaleTimeString('en-US', {
+            timeZone: targetTimeZone,
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false 
+        });
+        document.getElementById('target-time').innerText = targetTimeStr;
+    }
+
+    setInterval(updateTime, 1000);
+    updateTime();
+</script>
+
+</body>
+</html>
