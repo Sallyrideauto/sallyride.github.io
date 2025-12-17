@@ -2,9 +2,17 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css" />
 
 <style>
+  /* CSS 내부에서도 import 시도 (이중 안전장치) */
+  @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css");
+
   /* --- 1. 색상 및 변수 설정 --- */
   :root {
     --text-main: #37352f;
@@ -32,25 +40,24 @@
   }
 
   body {
-    /* 폰트 적용: 프리텐다드 우선, 없으면 시스템 폰트 */
-    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+    /* 폰트 우선순위: 프리텐다드 -> Noto Sans KR -> 시스템 폰트 */
+    font-family: "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     padding: 20px;
     color: var(--text-main);
     background: transparent;
     margin: 0;
   }
 
-  /* 버튼과 입력창에도 폰트 상속 강제 */
+  /* 폼 요소에도 폰트 강제 적용 */
   button, input, textarea {
-    font-family: inherit;
+    font-family: "Pretendard", "Noto Sans KR", sans-serif;
   }
 
   /* --- 타이머 --- */
   .timer-box { text-align: center; margin-bottom: 25px; color: #37352f; }
   @media (prefers-color-scheme: dark) { .timer-box { color: #d9d9d9; } }
   
-  /* 프리텐다드는 숫자가 깔끔해서 자간을 너무 줄이지 않아도 예쁩니다 */
-  .time { font-size: 54px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -0.5px; margin-bottom: 10px; }
+  .time { font-size: 54px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -1px; margin-bottom: 10px; }
   
   .btn {
     padding: 6px 16px; border: 1px solid rgba(0,0,0,0.1); border-radius: 8px;
@@ -98,7 +105,7 @@
     background: transparent;
     border: 1px solid var(--border-input);
     color: inherit;
-    border-radius: 8px; box-sizing: border-box; outline: none; font-size: 15px; /* 프리텐다드는 약간 커도 예쁨 */
+    border-radius: 8px; box-sizing: border-box; outline: none; font-size: 15px;
     margin-bottom: 24px; transition: 0.2s;
   }
   @media (prefers-color-scheme: dark) { .task-input { color: #d9d9d9; } }
@@ -147,12 +154,12 @@
     border-radius: 50%; 
     display: flex; align-items: center; justify-content: center; 
     font-size: 12px; transition: 0.2s;
-    color: transparent; /* 미완료 시 아이콘 숨김 */
+    color: transparent; 
   }
   
   .done .custom-check { 
     background: #333; 
-    color: white; /* 완료 시 아이콘 보임 */
+    color: white; 
     border-color: transparent; 
   }
   
@@ -236,8 +243,7 @@
 
 <script>
   let currentCategory = 'work';
-  // 폰트 변경으로 인해 저장소 키는 그대로 유지하거나 새로 파도 되지만, 
-  // 디자인만 바뀌는 것이므로 데이터를 유지하기 위해 같은 키를 사용합니다.
+  // 폰트만 안정화되었으므로 데이터 키 유지
   const STORAGE_KEY = 'notion_pomodoro_v7_pretendard';
   const DATE_KEY = 'notion_pomodoro_date_v7';
 
